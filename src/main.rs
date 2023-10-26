@@ -36,7 +36,7 @@ fn main() {
     println!();
 
     for i in 1..11 {
-        print!("Iteration {}; ", i);
+        print!("Iteration {}; ", i);    
 
         let r_new = BETA * m * &r_prev + &c;
         print!("r_new: {:?}; ", r_new);
