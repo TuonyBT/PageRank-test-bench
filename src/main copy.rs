@@ -1,31 +1,30 @@
 extern crate nalgebra as na;
 
-use na::{Vector4, Matrix4, Matrix, Const, ArrayStorage};
+use na::{Vector3, Matrix3, Matrix, Const, ArrayStorage};
 
 const THRESHOLD: f32 = 0.0000000000001;
-const BETA: f32 = 1.0;
+const BETA: f32 = 0.8;
 
 fn main() {
 
     // adjacency matrix
-    let arr = Matrix4::<f32>::from_columns(
-        &[Vector4::new(0.0, 1.0, 1.0, 1.0),
-        Vector4::new(0.0, 0.0, 1.0, 1.0),
-        Vector4::new(1.0, 0.0, 0.0, 0.0),
-        Vector4::new(1.0, 0.0, 1.0, 0.0)]
+    let arr = Matrix3::<f32>::from_columns(
+        &[Vector3::new(1.0, 1.0, 1.0),
+        Vector3::new(1.0, 0.0, 1.0),
+        Vector3::new(0.0, 0.0, 1.0)]
     );
     println!("Points awarded matrix: {:?}", arr);
 
     let s = arr.row_sum_tr();
     println!("Summation of columns: {:?}", s);
 
-    let m = Matrix4::<f32>::from_columns( 
+    let m = Matrix3::<f32>::from_columns( 
                 &arr.column_iter().zip(&s).map(|(c, &cs)| c / cs)
-                .collect::<Vec<Matrix<f32, Const<4>, Const<1>, ArrayStorage<f32, 4, 1>>>>()
+                .collect::<Vec<Matrix<f32, Const<3>, Const<1>, ArrayStorage<f32, 3, 1>>>>()
             );
     println!("Column stochastic probability matrix M: {:?}", m);
 
-    let r_new = Vector4::from_element(1.0 / m.ncols() as f32);
+    let r_new = Vector3::from_element(1.0 / m.ncols() as f32);
     println!("Initial rank vector: {:?}", r_new);
 
     let c = r_new.clone() * (1.0 - BETA);
